@@ -6,13 +6,6 @@
     <div>
         <button @click="enableCustomLayout">Update layout</button>
     </div>
-    <FormKit
-      type="form"
-      @submit="submit"
-      submit-label="登録する"
-      incomplete-message="入力内容に不備があるよ">
-      <FormKitSchema :schema="schema"/>
-    </FormKit>
 </template>
 
 <script lang="ts" setup>
