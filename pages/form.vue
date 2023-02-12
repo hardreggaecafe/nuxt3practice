@@ -5,7 +5,12 @@
   <div>
     <h1>New Character</h1>
 
-    <FormKit type="form">
+    <FormKit type="form"
+      @submit="createCharacter"
+      :plugins="[castRangeToNumber]"
+      submit-label="Create Character"
+      #default="{ value }"
+     >
       <FormKit
         type="text"
         name="name"
@@ -69,10 +74,6 @@
 </template>
 
 <script setup>
-const param1 = ref('name')
-console.log (param1);
-
-// console.log (this.name);
 //  const { data } = await useFetch("http://localhost:8080/api/v1/posts", {
 //        method: 'POST',
 //        query: {
@@ -83,4 +84,57 @@ console.log (param1);
 //          dexterity: this.dexterity,
 //        }
 //        });
+
+import { onMounted } from 'vue'
+import { getNode } from '@formkit/core'
+
+const castRangeToNumber = (node) => {
+  // We add a check to add the cast only to range inputs
+  if (node.props.type !== 'range') return
+
+  node.hook.input((value, next) => next(Number(value)))
+}
+
+const CHARACTER_BASE_STATS = {
+  Warrior: {
+    strength: 9,
+    skill: 1,
+    dexterity: 5,
+  },
+  Mage: {
+    strength: 5,
+    skill: 10,
+    dexterity: 8,
+  },
+  Assassin: {
+    strength: 5,
+    skill: 4,
+    dexterity: 10,
+  },
+}
+
+const createCharacter = async (fields) => {
+  // await new Promise((r) => setTimeout(r, 1000))
+  // alert(JSON.stringify(fields))
+
+  const { data } = await useFetch("http://localhost:8080/api/v1/posts", {
+        method: 'POST',
+        body: {
+          name: fields.name,
+          classname: fields.classname,
+          strength: fields.strength,
+          skill: fields.skill,
+          dexterity: fields.dexterity,
+        }
+        })
+        .then(response => {
+          console.log ("success");
+          this.$router.push({
+          path: '/posts/' + data.data.id
+          })
+        })
+        .catch(error => {
+          console.log ("failed");
+        });
+}
 </script>
