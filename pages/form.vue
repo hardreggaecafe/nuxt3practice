@@ -117,24 +117,20 @@ const createCharacter = async (fields) => {
   // await new Promise((r) => setTimeout(r, 1000))
   // alert(JSON.stringify(fields))
 
-  const { data } = await useFetch("http://localhost:8080/api/v1/posts", {
-        method: 'POST',
-        body: {
-          name: fields.name,
-          classname: fields.classname,
-          strength: fields.strength,
-          skill: fields.skill,
-          dexterity: fields.dexterity,
-        }
-        })
-        .then(response => {
-          console.log ("success");
-          this.$router.push({
-          path: '/posts/' + data.data.id
-          })
-        })
-        .catch(error => {
-          console.log ("failed");
-        });
+    const { data } = await useFetch("http://localhost:8080/api/v1/posts", {
+          method: 'POST',
+          body: {
+            name: fields.name,
+            classname: fields.classname,
+            strength: fields.strength,
+            skill: fields.skill,
+            dexterity: fields.dexterity,
+          }
+    });
+    console.log ("success" + JSON.stringify(data));
+    const tmp_data = data._rawValue.data;
+    const router = useRouter();
+    console.log (`aaa = /posts/${tmp_data['id']}`);
+    router.push(`/posts/${tmp_data['id']}`)
 }
 </script>
